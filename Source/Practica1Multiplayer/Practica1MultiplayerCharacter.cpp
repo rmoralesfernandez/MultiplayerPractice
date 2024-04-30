@@ -9,6 +9,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "TP_WeaponComponent.h"
 #include "Engine/LocalPlayer.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -81,6 +82,13 @@ void APractica1MultiplayerCharacter::SetupPlayerInputComponent(UInputComponent* 
 }
 
 
+void APractica1MultiplayerCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(APractica1MultiplayerCharacter, Weapon);
+}
+
 void APractica1MultiplayerCharacter::Move(const FInputActionValue& Value)
 {
 	// input is a Vector2D
@@ -115,4 +123,32 @@ void APractica1MultiplayerCharacter::SetHasRifle(bool bNewHasRifle)
 bool APractica1MultiplayerCharacter::GetHasRifle()
 {
 	return bHasRifle;
+}
+
+void APractica1MultiplayerCharacter::Server_Fire_Implementation()
+{
+	if(!Weapon)
+	{
+		return;
+	}
+
+	Weapon->Fire_SpawnBall();
+	
+	Multi_Fire();
+}
+
+void APractica1MultiplayerCharacter::Multi_Fire_Implementation()
+{
+	if(!Weapon)
+	{
+		return;
+	}
+
+	auto role = GetLocalRole();
+	
+	if(role == ENetRole::ROLE_AutonomousProxy || role == ENetRole::ROLE_SimulatedProxy)
+	{
+		Weapon->Fire_Animation();
+		Weapon->Fire_Sound();
+	}
 }

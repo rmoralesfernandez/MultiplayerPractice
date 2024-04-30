@@ -2,10 +2,13 @@
 
 #pragma once
 
+#include "TP_WeaponComponent.h"
+#include <Net/UnrealNetwork.h>
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "Practica1MultiplayerCharacter.generated.h"
+
 
 class UInputComponent;
 class USkeletalMeshComponent;
@@ -64,6 +67,15 @@ public:
 	/** Getter for the bool */
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	bool GetHasRifle();
+
+	UFUNCTION(Server, Reliable)
+	void Server_Fire();
+
+	UFUNCTION(NetMulticast, Reliable)
+	void Multi_Fire();
+
+	UPROPERTY(Replicated)
+	UTP_WeaponComponent* Weapon = nullptr;
 
 protected:
 	/** Called for movement input */

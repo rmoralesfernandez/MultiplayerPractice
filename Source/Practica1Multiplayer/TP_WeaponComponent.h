@@ -49,8 +49,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void Fire();
 
-	UFUNCTION(Server, Reliable)
-	void Server_Fire();
+	UFUNCTION(Blueprintable)
+	void Fire_SpawnBall();
+
+	UFUNCTION(Blueprintable)
+	void Fire_Sound();
+
+	UFUNCTION(Blueprintable)
+	void Fire_Animation();
 
 
 protected:

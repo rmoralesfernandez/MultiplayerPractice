@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "TP_PickUpComponent.h"
 
 // Sets default values for this component's properties
 UTP_WeaponComponent::UTP_WeaponComponent()
@@ -20,12 +21,31 @@ UTP_WeaponComponent::UTP_WeaponComponent()
 
 void UTP_WeaponComponent::Fire()
 {
-	if (Character == nullptr || Character->GetController() == nullptr)
+	if (Character == nullptr)
 	{
 		return;
 	}
 
-	Fire();
+	auto owner  = GetOwner();
+
+	for(auto* cmp : owner->GetComponents())
+	{
+		if(auto* pickup = Cast<UTP_PickUpComponent>(cmp))
+		{
+			if(auto* character = pickup->MyCharacter)
+			{
+				character->Server_Fire();
+			}
+		}
+	}
+}
+
+void UTP_WeaponComponent::Fire_SpawnBall()
+{
+	if(Character == nullptr)
+	{
+		return;
+	}
 
 	// Try and fire a projectile
 	if (ProjectileClass != nullptr)
@@ -46,13 +66,29 @@ void UTP_WeaponComponent::Fire()
 			World->SpawnActor<APractica1MultiplayerProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 		}
 	}
-	
+}
+
+void UTP_WeaponComponent::Fire_Sound()
+{
+	if(Character == nullptr)
+	{
+		return;
+	}
+
 	// Try and play the sound if specified
 	if (FireSound != nullptr)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, FireSound, Character->GetActorLocation());
 	}
-	
+}
+
+void UTP_WeaponComponent::Fire_Animation()
+{
+	if(Character == nullptr)
+	{
+		return;
+	}
+
 	// Try and play a firing animation if specified
 	if (FireAnimation != nullptr)
 	{
@@ -63,18 +99,6 @@ void UTP_WeaponComponent::Fire()
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}
 	}
-}
-
-void UTP_WeaponComponent::Server_Fire_Implementation()
-{
-	auto *owner =GetOwner();
-
-	if(!owner)
-		throw;
-
-	auto mode = owner->GetNetMode();
-
-	UE_LOG(LogTemp, Log, TEXT("{i}"), mode);
 }
 
 void UTP_WeaponComponent::AttachWeapon(APractica1MultiplayerCharacter* TargetCharacter)
