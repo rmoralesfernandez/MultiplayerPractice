@@ -9,8 +9,10 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "SwitchInteract.h"
 #include "TP_WeaponComponent.h"
 #include "Engine/LocalPlayer.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -74,6 +76,8 @@ void APractica1MultiplayerCharacter::SetupPlayerInputComponent(UInputComponent* 
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APractica1MultiplayerCharacter::Look);
+
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &APractica1MultiplayerCharacter::Interact);
 	}
 	else
 	{
@@ -87,6 +91,27 @@ void APractica1MultiplayerCharacter::GetLifetimeReplicatedProps(TArray<FLifetime
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(APractica1MultiplayerCharacter, Weapon);
+}
+
+void APractica1MultiplayerCharacter::Interact()
+{
+	UE_LOG(LogTemp, Log, TEXT("Holaaaaaa"));
+
+	const auto start = FirstPersonCameraComponent->GetComponentLocation();
+	const auto end = start + FirstPersonCameraComponent->GetForwardVector() * 100.0f;
+	auto hit = FHitResult();
+	// UKismetSystemLibrary::LineTraceSingle(this, start, end, TraceTypeQuery1, false, {}, EDrawDebugTrace::ForDuration, hit, true,FLinearColor::Red, FLinearColor::Green, 0.5f);
+
+	UKismetSystemLibrary::SphereTraceSingle(this, start, end, 20.0f, TraceTypeQuery1, false, {}, EDrawDebugTrace::ForDuration, hit, true,FLinearColor::Red, FLinearColor::Green, 5.f);
+
+	if(auto * actor = hit.GetActor())
+	{
+		if(auto *swicthActor = Cast<ASwitchInteract>(actor))
+		{
+			swicthActor->Toggle();
+			UE_LOG(LogTemp, Log, TEXT("%s"), *actor->GetName());
+		}
+	}
 }
 
 void APractica1MultiplayerCharacter::Move(const FInputActionValue& Value)

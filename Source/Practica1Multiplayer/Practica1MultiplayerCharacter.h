@@ -5,6 +5,7 @@
 #include "TP_WeaponComponent.h"
 #include <Net/UnrealNetwork.h>
 #include "CoreMinimal.h"
+#include "InputActionValue.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "Practica1MultiplayerCharacter.generated.h"
@@ -43,6 +44,10 @@ class APractica1MultiplayerCharacter : public ACharacter
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* MoveAction;
+
+	/** Move Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	UInputAction* InteractAction;
 	
 public:
 	APractica1MultiplayerCharacter();
@@ -76,6 +81,9 @@ public:
 
 	UPROPERTY(Replicated)
 	UTP_WeaponComponent* Weapon = nullptr;
+
+	UFUNCTION()
+	void Interact();
 
 protected:
 	/** Called for movement input */
