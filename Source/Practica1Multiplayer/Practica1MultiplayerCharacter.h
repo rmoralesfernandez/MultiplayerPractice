@@ -5,7 +5,6 @@
 #include "TP_WeaponComponent.h"
 #include <Net/UnrealNetwork.h>
 #include "CoreMinimal.h"
-#include "Interactable.h"
 #include "InputActionValue.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
@@ -17,7 +16,6 @@ class USkeletalMeshComponent;
 class UCameraComponent;
 class UInputAction;
 class UInputMappingContext;
-// class UHealthComponent;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
@@ -34,10 +32,6 @@ class APractica1MultiplayerCharacter : public ACharacter
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCameraComponent;
-
-	// /** First person camera */
-	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	// UHealthComponent* HealthComponent;
 
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
@@ -90,9 +84,6 @@ public:
 
 	UFUNCTION()
 	void Interact();
-
-	UFUNCTION(Server, Reliable)
-	void Server_Interact(AActor* actor);
 
 protected:
 	/** Called for movement input */

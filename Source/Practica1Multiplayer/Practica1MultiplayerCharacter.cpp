@@ -7,14 +7,12 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "EnhancedInputComponent.h"
-#include "HealthComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "SwitchInteract.h"
 #include "TP_WeaponComponent.h"
 #include "Engine/LocalPlayer.h"
 #include "Kismet/KismetSystemLibrary.h"
-
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -41,8 +39,9 @@ APractica1MultiplayerCharacter::APractica1MultiplayerCharacter()
 	Mesh1P->SetupAttachment(FirstPersonCameraComponent);
 	Mesh1P->bCastDynamicShadow = false;
 	Mesh1P->CastShadow = false;
-	Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
+	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
+
 }
 
 void APractica1MultiplayerCharacter::BeginPlay()
@@ -109,24 +108,10 @@ void APractica1MultiplayerCharacter::Interact()
 	{
 		if(auto *swicthActor = Cast<ASwitchInteract>(actor))
 		{
-			if(UKismetSystemLibrary::DoesImplementInterface(actor,UInteractable::StaticClass()))
-			{
-				Server_Interact(actor);
-			}
-			// swicthActor->Toggle();
-			// UE_LOG(LogTemp, Log, TEXT("%s"), *actor->GetName());
+			swicthActor->Toggle();
+			UE_LOG(LogTemp, Log, TEXT("%s"), *actor->GetName());
 		}
 	}
-}
-
-void APractica1MultiplayerCharacter::Server_Interact_Implementation(AActor* actor)
-{
-	if(!actor)
-	{
-		return;
-	}
-
-	IInteractable::Execute_Interact(actor);
 }
 
 void APractica1MultiplayerCharacter::Move(const FInputActionValue& Value)

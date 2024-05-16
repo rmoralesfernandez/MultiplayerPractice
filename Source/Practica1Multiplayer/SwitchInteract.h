@@ -3,14 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Interactable.h"
 #include "GameFramework/Actor.h"
 #include "SwitchInteract.generated.h"
 
-class UPointLightComponent;
-
 UCLASS()
-class PRACTICA1MULTIPLAYER_API ASwitchInteract : public AActor, public IInteractable
+class PRACTICA1MULTIPLAYER_API ASwitchInteract : public AActor
 {
 	GENERATED_BODY()
 
@@ -25,9 +22,6 @@ class PRACTICA1MULTIPLAYER_API ASwitchInteract : public AActor, public IInteract
 
 	UPROPERTY(EditDefaultsOnly)
 	FRotator PivotRotationOff = {};
-
-	UPROPERTY(EditDefaultsOnly)
-	UPointLightComponent* Light = nullptr;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -38,11 +32,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Toggle();
-
-	UFUNCTION(NetMulticast, Reliable)
-	void Multi_Toggle();
-
-	virtual void Interact_Implementation() override;
 
 protected:
 	// Called when the game starts or when spawned
