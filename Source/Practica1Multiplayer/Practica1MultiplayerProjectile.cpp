@@ -3,6 +3,8 @@
 #include "Practica1MultiplayerProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
+#include "HealthComponent.h"
+#include "Practica1MultiplayerCharacter.h"
 
 APractica1MultiplayerProjectile::APractica1MultiplayerProjectile() 
 {
@@ -33,11 +35,22 @@ APractica1MultiplayerProjectile::APractica1MultiplayerProjectile()
 
 void APractica1MultiplayerProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+	// auto role = GetLocalRole();
 	// Only add impulse and destroy projectile if we hit a physics
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
 	{
-		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+		// auto* character = Cast<APractica1MultiplayerCharacter>(OtherActor);
+		//
+		// if(character && role == ROLE_Authority)
+		// {
+		// 	character->HealthComponent->Health -= 10;
+		// }
+		// else if(OtherComp->IsSimulatingPhysics())
+		// {
+		// 	
+		// }
 
+		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 		Destroy();
 	}
 }
